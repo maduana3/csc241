@@ -3,20 +3,21 @@
 ### Homework 6
 import os
 
+cleanraw = []
+cleannumbers = []
+names = []
+cleandict = {}
+validscores = {}
+eliminated = {}
+finalscores = {}
+
 #PART 1: cleanData function that takes 2 parameters
-def cleanData(x):
-    #empty list,dict to hold data during cleaning and writing to output
-    cleanraw = []
-    cleannumbers = []
-    names = []
-    cleandict = {}
-    validscores = {}
-    eliminated = {}
-    finalscores = {}
+def cleanData(x,y):
+    #empty list,dict to hold data during cleaning and writing to outpu
     
     #open initial txt file and outputfile
     initial = open(x)
-    clean = open('clean.txt', mode = 'w')
+    clean = open(y, mode = 'w')
 
     #read the txt file into container and closes it 
     raw = initial.readlines()
@@ -59,57 +60,100 @@ def cleanData(x):
     # if not then adds it to a dictionary for elimiated athletes
     for cleaninfo in cleandict:
         if len(cleandict[cleaninfo]) == 8:
-            validscores[cleaninfo] = cleannumbers[item]
+#            validscores[cleaninfo] = cleannumbers[item]
             clean.write(cleaninfo + str(cleandict[cleaninfo]) +'\n')
         else:
             eliminated[cleaninfo] = cleandict[cleaninfo]
-    print(validscores)
+#    print(validscores)
 
-    for k,v in validscores.items():
-        max(v).remove()
-        item[item.index(min(item))].remove()
+    clean.close()
 
-        fscore = sum(score)
-        finalscore[score] = fscore
-    print(finalscore)
+    return(eliminated)
+    
+#    for k,v in validscores.items():
+#        max(v).remove()
+#        item[item.index(min(item))].remove()
+
+#        fscore = sum(score)
+#        finalscore[score] = fscore
+#    print(finalscore)
 ###################################################################
 cleanraw = []
 names = []
 cleannumbers = []
 scores = []
 finalscore = {}
+finaldict = {}
 
-initialfile = input('Please enter the name of the file with the scores:')
-cleanData(initialfile)
+userIntent = 'Y'
 
-#initial = open('clean.txt')
-raw = initial.readlines()
-initial.close()
+while(userIntent == 'Y'):
+    initialfile = input('Please enter the name of the file with the scores:')
+    y = 'clean.txt'
+    cleanData(initialfile,y)
 
-for line in raw:
-    line1 = line.strip('\n', '[', ']')
-    cleanraw.append(line1)
-print(cleanraw)
+    initial = open(y)
+    raw = initial.readlines()
+    initial.close()
+
+    for line in raw:
+        line1 = line.strip('\n')
+        line2 = line1.strip(']')
+        line3 = line2.replace('[','')
+        line4 = line3.replace(',','')
+        cleanraw.append(line4)
+#print(cleanraw)
 
     #original txt file formatted 12 characters from first number. seperates the first 12 characters
     #adds it to names list. Then append the rest of the line as a list seperated by space to a list called clean numbers
-for y in cleanraw:
-    names.append(y[:12])
-    x = y[12:].split(' ')
-    cleannumbers.append(x)
+    for y in cleanraw:
+        names.append(y[:12])
+        x = y[12:].split(' ')
+        cleannumbers.append(x)
+#print(cleannumbers)
 
     #this part looks at cleannumbers list and replaces the string values of the list to a float type
-for z in cleannumbers:
-    for i in range(0,len(z)):
-        numbers = float(z[i])
-        z[i],numbers = numbers,z[i]
-print(cleannumbers)
+    for z in cleannumbers:
+        for i in range(0,len(z)):
+            numbers = float(z[i])
+            z[i],numbers = numbers,z[i]
+#print(cleannumbers)
 
-for numbers in cleannumbers:
-    cleannumbers[numbers.index(max(numbers))].remove()
-    cleannumbers[numbers.index(min(numbers))].remove()
-    score = sum(numbers)
+    for items in range(0,len(names)):
+        finaldict[names[items]] = cleannumbers[items]
+    
+    for numbers in cleannumbers:
+        numbers.remove(max(numbers))
+        numbers.remove(min(numbers))
+        score = sum(numbers)
+        scores.append(score)
+    
+#for item in range(0,len(names)):
+#        finalscore[names[item]] = scores[item]
+#        finalscore.values().sort()
+#print(finalscore)
 
-for item in range(0,len(names)):
-        finalscore[names[item]] = scores[item]
-orint(finaldict)
+
+    option = eval(input('What would you like to do:\n 1.Request the medal winner\n 2. Find a score\n 3. View Eliminated Contestants\n 4. Export list of contestants and scores\n 5. Quit\n'))
+
+    if option == 1:
+    
+        highest = max(finalscore.values()).sort()
+        print(highest)
+
+    elif option == 2:
+        search = input('Please enter name of the contestant: ')
+        if search in finaldict.keys():
+            print(finaldict[search])
+
+    elif option == 3:
+        print(eliminated)
+
+    #elif option == 4:
+           
+
+    elif option == 5:
+        break
+
+    else:
+        print('Not a valid option, please try another entry.')
